@@ -8,7 +8,7 @@ class DoomBasic(AbstractGame):
         self.game.load_config("basic.cfg")
         self.game.set_doom_scenario_path("basic.wad")
 
-    def __initialize(self):
+    def _initialize(self):
         self.__setup_game()
         left = [1, 0, 0]
         right = [0, 1, 0]
@@ -30,3 +30,6 @@ class DoomBasic(AbstractGame):
 
     def get_next_state(self):
         return self.game.get_state().screen_buffer
+
+    def init(self):
+        self.game.init()

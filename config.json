@@ -1,6 +1,7 @@
 {
   "track_with_comet": true,
   "name": "Doom-DeepQ",
+  "lr": 0.0001,
   "total_episodes": 2000,
   "max_steps": 100,
   "batch_size": 128,

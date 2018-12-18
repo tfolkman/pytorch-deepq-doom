@@ -7,10 +7,10 @@ class AbstractGame(ABC):
         super().__init__()
         self.game = None
         self.possible_actions = None
-        self.initialize()
+        self._initialize()
 
     @abstractmethod
-    def __initialize(self):
+    def _initialize(self):
         """
         Sets the self variables of
         possible_actions -> a list of possible moves
@@ -42,3 +42,12 @@ class AbstractGame(ABC):
         Gets the next state
         :return: Next state
         """
+        pass
+
+    @abstractmethod
+    def init(self):
+        """
+        Initializes a game
+        :return:
+        """
+        pass
