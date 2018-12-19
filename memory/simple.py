@@ -15,7 +15,7 @@ class SimpleMemory(AbstractMemory):
         Resize to 84x84
     """
     def __init__(self, memory_size):
-        super.__init__(memory_size)
+        super().__init__(memory_size)
         self.img_transforms = transforms.Compose([transforms.Resize((84,84)), transforms.ToTensor()])
 
     def _combine_memories(self, memories):

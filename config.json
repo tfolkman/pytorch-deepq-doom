@@ -9,5 +9,7 @@
   "explore_stop": 0.01,
   "decay": 20000,
   "gamma": 0.99,
-  "memory_size": 1000000
+  "memory_size": 1000000,
+  "save_every": 100,
+  "save_path": "./model_weights/doom_dqn.state"
 }

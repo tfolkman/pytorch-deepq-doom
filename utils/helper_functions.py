@@ -16,7 +16,7 @@ def handle_not_done(game, state_trans, action, reward, memory):
     return next_state, False
 
 
-def initialize_memory(pretrain_length, game, possible_actions, memory):
+def initialize_memory(pretrain_length, game,  memory):
     state, game_start = game.start_new_game()
 
     for i in range(pretrain_length):
@@ -24,7 +24,7 @@ def initialize_memory(pretrain_length, game, possible_actions, memory):
         state_trans = memory.transform(state)
 
         # Random action
-        action = random.choice(possible_actions)
+        action = random.choice(game.possible_actions)
         reward, done = game.take_action(action)
 
         # If we're dead
@@ -36,13 +36,13 @@ def initialize_memory(pretrain_length, game, possible_actions, memory):
             state, game_start = handle_not_done(game, state_trans, action, reward, memory)
 
 
-def epsilon_greedy_move(game, model, state, possible_actions, config, steps_done):
+def epsilon_greedy_move(game, model, state, config, steps_done):
     eps_threshold = config["explore_stop"] + (config["explore_start"] - config["explore_stop"]) \
         * math.exp(-1. * steps_done / config["decay"])
     if np.random.rand() > eps_threshold:
         with torch.no_grad():
-            action = possible_actions[int(torch.argmax(model(state)))]
+            action = game.possible_actions[int(torch.argmax(model(state)))]
     else:
-        action = random.choice(possible_actions)
+        action = random.choice(game.possible_actions)
     reward, done = game.take_action(action)
     return reward, action, done, eps_threshold
