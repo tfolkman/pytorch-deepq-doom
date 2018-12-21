@@ -1,23 +1,27 @@
 from vizdoom.vizdoom import DoomGame
 from games.base_game import AbstractGame
+import os
 
 
 class DoomBasic(AbstractGame):
-    def __setup_game(self):
+    def _setup_game(self):
         self.game = DoomGame()
-        self.game.load_config("basic.cfg")
-        self.game.set_doom_scenario_path("basic.wad")
+        self.file_path = os.path.dirname(__file__)
+        self.game.load_config(os.path.join(self.file_path, "basic.cfg"))
+        self.game.set_doom_scenario_path(os.path.join(self.file_path, "basic.wad"))
 
     def _initialize(self):
-        self.__setup_game()
+        self._setup_game()
+        self.init()
         left = [1, 0, 0]
         right = [0, 1, 0]
         shoot = [0, 0, 1]
         self.possible_actions = [left, right, shoot]
 
     def set_window_visibility(self, visibility):
-        self.__setup_game()
+        self._setup_game()
         self.game.set_window_visible(visibility)
+        self.init()
 
     def start_new_game(self):
         self.game.new_episode()
@@ -28,8 +32,14 @@ class DoomBasic(AbstractGame):
     def take_action(self, action):
         return self.game.make_action(action), self.game.is_episode_finished()
 
-    def get_next_state(self):
+    def get_state(self):
         return self.game.get_state().screen_buffer
 
     def init(self):
         self.game.init()
+
+    def is_done(self):
+        return self.game.is_episode_finished()
+
+    def close(self):
+        self.game.close()

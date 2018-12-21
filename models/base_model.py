@@ -2,10 +2,12 @@ from abc import ABC, abstractmethod
 import torch
 from torch import nn
 
+from utils.helper_functions import get_device
+
 
 class AbstractModel(nn.Module, ABC):
 
-    def __init__(self, lr, gamma):
+    def __init__(self, gamma):
         """
         Assumes adam optimizer with defaults except set lr
         :param lr:
@@ -13,17 +15,16 @@ class AbstractModel(nn.Module, ABC):
         :param save_path: location to save weights
         """
         super().__init__()
-        self.lr = lr
         self.gamma = gamma
-        self.optim = torch.optim.Adam(self.parameters(), lr=self.lr)
-        if torch.cuda.is_available():
-            self.device = torch.device('cuda')
-        else:
-            self.device = torch.device('cpu')
+        self.optim = None
+        self.device = get_device()
 
     @abstractmethod
     def forward(self, *input):
         pass
+
+    def set_optimizer(self, optim):
+        self.optim = optim
 
     def update_model(self, memory_sample):
         """

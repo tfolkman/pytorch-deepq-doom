@@ -9,6 +9,7 @@ vizdoom = "*"
 torch = "*"
 Pillow = "*"
 torchvision = "*"
+click = "*"
 
 [dev-packages]
 

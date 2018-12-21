@@ -7,7 +7,7 @@ and [Pytorch](https://pytorch.org/)
 3. Sign up for [comet ml](https://www.comet.ml/) (free). A very nice service for tracking your experiments. This repo
 automatically uses comet to track the loss and reward during training. Grab your API key.
 4. Modify the config.json as you see fit:
-    * track_with_comet: Whether to turn on comet tracking (note still need to pass an API key value)
+    * disable_comet: Whether to turn off comet tracking (note still need to pass an API key value)
     * name: project name in comet
     * lr: learning rate (I assume adam optimizer)
     * total_episodes: the number of games to play during training
@@ -18,9 +18,9 @@ automatically uses comet to track the loss and reward during training. Grab your
     * decay: how many steps to decay the learning rate over
     * gamma: the discount factor for future rewards
     * memory_size: max memory size
-    * save_every: how often to save the model weights
-    * save_path: where to save model weights to
-5. Run: 'pipenv python -k {comet api key} -c {path to config.json}'
+    * save_every: how often to save the model weights and log statistics to the command line (# episodes)
+    * save_file: where to save model weights to
+5. Run: 'pipenv python --key {comet api key} --config {path to config.json}'
     * Note: path to config.json defaults to config.json
 6. Go check out your comet dashboard and track its progress!
 

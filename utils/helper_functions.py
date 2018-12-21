@@ -10,7 +10,7 @@ def handle_done(transformed_state, action, reward,  memory):
 
 
 def handle_not_done(game, state_trans, action, reward, memory):
-    next_state = game.get_next_state()
+    next_state = game.get_state()
     next_state_trans = memory.transform(next_state)
     memory.push(state_trans, action, reward, next_state_trans, True)
     return next_state, False
@@ -30,7 +30,7 @@ def initialize_memory(pretrain_length, game,  memory):
         # If we're dead
         if done:
             handle_done(state_trans, action, reward, memory)
-            game, state, game_start = game.start_new_game()
+            state, game_start = game.start_new_game()
 
         else:
             state, game_start = handle_not_done(game, state_trans, action, reward, memory)
@@ -46,3 +46,11 @@ def epsilon_greedy_move(game, model, state, config, steps_done):
         action = random.choice(game.possible_actions)
     reward, done = game.take_action(action)
     return reward, action, done, eps_threshold
+
+
+def get_device():
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    else:
+        device = torch.device('cpu')
+    return device

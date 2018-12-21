@@ -1,8 +1,8 @@
 {
-  "track_with_comet": true,
+  "disable_comet": false,
   "name": "Doom-DeepQ",
   "lr": 0.0001,
-  "total_episodes": 2000,
+  "total_episodes": 1500,
   "max_steps": 100,
   "batch_size": 128,
   "explore_start": 1.0,
@@ -10,6 +10,6 @@
   "decay": 20000,
   "gamma": 0.99,
   "memory_size": 1000000,
-  "save_every": 100,
-  "save_path": "./model_weights/doom_dqn.state"
+  "save_every": 50,
+  "save_file": "./model_weights/doom_dqn.state"
 }

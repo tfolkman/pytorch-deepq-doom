@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import deque, namedtuple
-import torch
+from utils.helper_functions import get_device
 
 
 class AbstractMemory(ABC):
@@ -10,10 +10,7 @@ class AbstractMemory(ABC):
         self.memory_size = memory_size
         self.memory = deque(maxlen=memory_size)
         self.MemoryItem = namedtuple('MemoryItem', ['state', 'action', 'reward', 'next_state', 'not_done'])
-        if torch.cuda.is_available():
-            self.device = torch.device('cuda')
-        else:
-            self.device = torch.device('cpu')
+        self.device = get_device()
 
     def __len__(self):
         return len(self.memory)

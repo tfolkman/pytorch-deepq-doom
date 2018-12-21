@@ -37,10 +37,10 @@ class AbstractGame(ABC):
         pass
 
     @abstractmethod
-    def get_next_state(self):
+    def get_state(self):
         """
-        Gets the next state
-        :return: Next state
+        Gets the state
+        :return: state
         """
         pass
 
@@ -48,6 +48,30 @@ class AbstractGame(ABC):
     def init(self):
         """
         Initializes a game
+        :return:
+        """
+        pass
+
+    @abstractmethod
+    def is_done(self):
+        """
+        Returns whether game is done or not
+        :return:
+        """
+        pass
+
+    @abstractmethod
+    def close(self):
+        """
+        Closes the game
+        :return:
+        """
+        pass
+
+    @abstractmethod
+    def set_window_visibility(self):
+        """
+        Sets whether the game window is shown
         :return:
         """
         pass
