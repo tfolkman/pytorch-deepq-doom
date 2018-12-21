@@ -1,10 +1,9 @@
-from models.base_model import AbstractModel
 from torch import nn
 
 
-class DeepQ(AbstractModel):
-    def __init__(self, gamma):
-        super().__init__(gamma)
+class DeepQ(nn.Module):
+    def __init__(self):
+        super().__init__()
         self.conv1 = nn.Conv2d(1, 32, 8, 2)
         self.conv2 = nn.Conv2d(32, 64, 4, 2)
         self.conv3 = nn.Conv2d(64, 128, 4, 2)

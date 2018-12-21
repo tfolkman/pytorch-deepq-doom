@@ -27,7 +27,16 @@ automatically uses comet to track the loss and reward during training. Grab your
 
 ## Extendability
 
+I have tried to make this package fairly easy to extend by creating abstract base classes for the game, memory, 
+and loss. If you want to change any of these, creating classes that implement the abstract base class should work.
+Then you just have to update the train.py file to use your implementation.
+
+To implement a different model, just implement nn.module as is standard for pytorch.
+
 ## Running Trained Model
+
+Run 'pipenv python --weights {path to trained weights} --n {number of games to play} --sleep {how long (seconds) to 
+sleep between moves} run.py'
 
 ## Sources
 * https://simoninithomas.github.io/Deep_reinforcement_learning_Course/

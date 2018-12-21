@@ -2,6 +2,8 @@ from comet_ml import Experiment
 import torch
 import logging
 import click
+
+from losses.td_loss import TDLoss
 from models.initializers import init_weights
 from utils.config_options import load_config
 from utils.helper_functions import epsilon_greedy_move, handle_done, handle_not_done, initialize_memory, get_device
@@ -29,9 +31,10 @@ def train(key, config):
     device = get_device()
 
     memory = SimpleMemory(config_options["memory_size"])
-    model = DeepQ(config_options['lr']).to(device)
-    model.set_optimizer(torch.optim.Adam(model.parameters(), config_options['lr']))
+    model = DeepQ().to(device)
     model.apply(init_weights)
+    optim = torch.optim.Adam(model.parameters(), config_options['lr'])
+    loss_function = TDLoss(model, config_options['gamma'], optim)
     game = DoomBasic()
     initialize_memory(config_options["batch_size"], game, memory)
 
@@ -59,7 +62,7 @@ def train(key, config):
             else:
                 state, game_start = handle_not_done(game, state_trans, action, reward,  memory)
 
-            loss_sum += model.update_model(memory.sample(config_options["batch_size"]))
+            loss_sum += loss_function.update_model(memory.sample(config_options["batch_size"]))
 
         log_statistics_and_save(loss_sum, reward_sum, eps_threshold, config_options['max_steps'], episode,
                                 config_options['save_every'], config_options['save_file'],
