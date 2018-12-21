@@ -14,13 +14,13 @@ log = logging.getLogger(__name__)
 @click.command()
 @click.option('--weights', default='./model_weights/doom_dqn.state',
               help='path to your trained weights. default is ./model_weights/doom_dqn.state')
-@click.option('--n', default=5, help="number of games to play. default 5.")
+@click.option('--n', default=10, help="number of games to play. default 10.")
 @click.option('--sleep', default=.02, help="time to sleep between each move. default is .02")
 def play_game(weights, n, sleep):
     game = DoomBasic()
     game.set_window_visibility(True)
     device = get_device()
-    model = DeepQ(1.0).to(device)
+    model = DeepQ().to(device)
     model.load_state_dict(torch.load(weights))
     memory = SimpleMemory(1)
     for i in range(n):
