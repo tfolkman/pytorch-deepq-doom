@@ -20,7 +20,7 @@ automatically uses comet to track the loss and reward during training. Grab your
     * memory_size: max memory size
     * save_every: how often to save the model weights and log statistics to the command line (# episodes)
     * save_file: where to save model weights to
-5. Run: 'pipenv python --key {comet api key} --config {path to config.json}'
+5. Run: 'pipenv run python --key {comet api key} --config {path to config.json}'
     * Note: path to config.json defaults to config.json
 6. Go check out your comet dashboard and track its progress!
 
@@ -35,8 +35,16 @@ To implement a different model, just implement nn.module as is standard for pyto
 
 ## Running Trained Model
 
-Run 'pipenv python --weights {path to trained weights} --n {number of games to play} --sleep {how long (seconds) to 
+Run 'pipenv run python --weights {path to trained weights} --n {number of games to play} --sleep {how long (seconds) to 
 sleep between moves} run.py'
+
+## Using my pre-trained weights
+
+You can download some weights I trained [here](https://www.dropbox.com/s/uewrs6uya6qws9q/doom_dqn.state?dl=0).
+
+Download them; create a folder called "model_weights" and move them into that folder. Then you can run 'pipenv run python run.py' 
+
+You can view the training for this model, as well as the hyper-parameters, on comet ml [here](https://www.comet.ml/syrios/doom-deepq/2f58119e080c474b99b7421206b7591b/chart).
 
 ## Sources
 * https://simoninithomas.github.io/Deep_reinforcement_learning_Course/
