@@ -1,3 +1,5 @@
+from collections import deque
+
 import PIL
 import torch
 import numpy as np
@@ -16,6 +18,7 @@ class SimpleMemory(AbstractMemory):
     """
     def __init__(self, memory_size):
         super().__init__(memory_size)
+        self.stacked_frames = deque([torch.zeros((84, 84)) for _ in range(4)], maxlen=4)
         self.img_transforms = transforms.Compose([transforms.Resize((84,84)), transforms.ToTensor()])
 
     def _combine_memories(self, memories):
@@ -37,3 +40,15 @@ class SimpleMemory(AbstractMemory):
     def sample(self, batch_size):
         indxs = np.random.choice(range(len(self.memory)), batch_size, replace=False)
         return self._combine_memories([self.memory[i] for i in indxs])
+
+    def reset_stack(self):
+        self.stacked_frames = deque([torch.zeros((84, 84)) for _ in range(4)], maxlen=4)
+
+    def fill_stack(self, state):
+        self.stacked_frames = deque([state for _ in range(4)], maxlen=4)
+
+    def append_to_stack(self, state):
+        self.stacked_frames.append(state)
+
+    def get_stacked_states(self):
+        return torch.stack(list(self.stacked_frames), 1)
