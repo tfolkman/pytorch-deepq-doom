@@ -45,22 +45,26 @@ def train(key, config):
         state, game_start = game.start_new_game()
         loss_sum = 0
         reward_sum = 0
+        memory.reset_stack()
         for step in range(config_options["max_steps"]):
 
             state_trans = memory.transform(state)
 
-            reward, action, done, eps_threshold = epsilon_greedy_move(game, model, state_trans,
+            if step == 0:
+                memory.fill_stack(state_trans)
+
+            reward, action, done, eps_threshold = epsilon_greedy_move(game, model, memory.get_stacked_states(),
                                                                       config_options, total_steps)
             reward_sum += reward
             total_steps += 1
             if done:
-                handle_done(state_trans, action, reward,  memory)
+                handle_done(memory.get_stacked_states(), action, reward,  memory)
                 log_statistics_and_save(loss_sum, reward_sum, eps_threshold, step, episode,
                                         config_options['save_every'], config_options['save_file'],
                                         model, experiment)
                 break
             else:
-                state, game_start = handle_not_done(game, state_trans, action, reward,  memory)
+                state, game_start = handle_not_done(game, memory.get_stacked_states(), action, reward,  memory)
 
             loss_sum += loss_function.update_model(memory.sample(config_options["batch_size"]))
 

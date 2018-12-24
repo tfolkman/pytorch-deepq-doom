@@ -27,14 +27,15 @@ def play_game(weights, n, sleep):
         _, _ = game.start_new_game()
         total_reward = 0
         state = memory.transform(game.get_state())
+        memory.fill_stack(state)
         while not game.is_done():
-            predictions = model(state)
+            predictions = model(memory.get_stacked_states().to(get_device()))
             action = game.possible_actions[int(torch.argmax(predictions))]
             reward, _ = game.take_action(action)
             total_reward += reward
             if game.is_done():
                 break
-            state = memory.transform(game.get_state())
+            memory.append_to_stack(memory.transform(game.get_state()))
             time.sleep(sleep)
         log.info("Total reward for game {0}: {1}".format(i, total_reward))
     game.close()

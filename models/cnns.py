@@ -4,7 +4,7 @@ from torch import nn
 class DeepQ(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(1, 32, 8, 2)
+        self.conv1 = nn.Conv2d(4, 32, 8, 2)
         self.conv2 = nn.Conv2d(32, 64, 4, 2)
         self.conv3 = nn.Conv2d(64, 128, 4, 2)
         self.bn1 = nn.BatchNorm2d(32)

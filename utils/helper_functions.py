@@ -12,16 +12,24 @@ def handle_done(transformed_state, action, reward,  memory):
 def handle_not_done(game, state_trans, action, reward, memory):
     next_state = game.get_state()
     next_state_trans = memory.transform(next_state)
-    memory.push(state_trans, action, reward, next_state_trans, True)
+    memory.append_to_stack(next_state_trans)
+    memory.push(state_trans, action, reward, memory.get_stacked_states(), True)
     return next_state, False
 
 
 def initialize_memory(pretrain_length, game,  memory):
     state, game_start = game.start_new_game()
+    memory.reset_stack()
+    cnt = 0
 
     for i in range(pretrain_length):
 
         state_trans = memory.transform(state)
+        if cnt == 0:
+            memory.fill_stack(state_trans)
+        else:
+            memory.append_to_stack(state_trans)
+        cnt += 1
 
         # Random action
         action = random.choice(game.possible_actions)
@@ -29,11 +37,13 @@ def initialize_memory(pretrain_length, game,  memory):
 
         # If we're dead
         if done:
-            handle_done(state_trans, action, reward, memory)
+            handle_done(memory.get_stacked_states(), action, reward, memory)
             state, game_start = game.start_new_game()
+            memory.reset_stack()
+            cnt = 0
 
         else:
-            state, game_start = handle_not_done(game, state_trans, action, reward, memory)
+            state, game_start = handle_not_done(game, memory.get_stacked_states(), action, reward, memory)
 
 
 def epsilon_greedy_move(game, model, state, config, steps_done):
@@ -41,7 +51,7 @@ def epsilon_greedy_move(game, model, state, config, steps_done):
         * math.exp(-1. * steps_done / config["decay"])
     if np.random.rand() > eps_threshold:
         with torch.no_grad():
-            action = game.possible_actions[int(torch.argmax(model(state)))]
+            action = game.possible_actions[int(torch.argmax(model(state.to(get_device()))))]
     else:
         action = random.choice(game.possible_actions)
     reward, done = game.take_action(action)

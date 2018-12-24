@@ -32,7 +32,7 @@ class SimpleMemory(AbstractMemory):
     def transform(self, x):
         img = PIL.Image.fromarray(x)
         img_cropped = transforms.functional.crop(img, 30, 30, 80, 100)
-        return self.img_transforms(img_cropped).to(self.device).unsqueeze(0)
+        return self.img_transforms(img_cropped).unsqueeze(0)
 
     def push(self, state_trans, action, reward, next_state_trans, not_done):
         self.memory.append(self.MemoryItem(state_trans, action, reward, next_state_trans, not_done))
@@ -51,4 +51,4 @@ class SimpleMemory(AbstractMemory):
         self.stacked_frames.append(state)
 
     def get_stacked_states(self):
-        return torch.stack(list(self.stacked_frames), 1)
+        return torch.stack(list(self.stacked_frames), 1).squeeze(2)
