@@ -12,8 +12,8 @@ log = logging.getLogger(__name__)
 
 
 @click.command()
-@click.option('--weights', default='./model_weights/doom_dqn.state',
-              help='path to your trained weights. default is ./model_weights/doom_dqn.state')
+@click.option('--weights', default='./model_weights/doom_dqn_stacked.state',
+              help='path to your trained weights. default is ./model_weights/doom_dqn_stacked.state')
 @click.option('--n', default=10, help="number of games to play. default 10.")
 @click.option('--sleep', default=.02, help="time to sleep between each move. default is .02")
 def play_game(weights, n, sleep):

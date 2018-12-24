@@ -40,11 +40,11 @@ sleep between moves} run.py'
 
 ## Using my pre-trained weights
 
-You can download some weights I trained [here](https://www.dropbox.com/s/uewrs6uya6qws9q/doom_dqn.state?dl=0).
+You can download some weights I trained [here](https://www.dropbox.com/s/itza42i81toutfc/doom_dqn_stacked.state?dl=0).
 
 Download them; create a folder called "model_weights" and move them into that folder. Then you can run 'pipenv run python run.py' 
 
-You can view the training for this model, as well as the hyper-parameters, on comet ml [here](https://www.comet.ml/syrios/doom-deepq/2f58119e080c474b99b7421206b7591b/chart).
+You can view the training for this model, as well as the hyper-parameters, on comet ml [here](https://www.comet.ml/syrios/doom-deepq/47f0975ad66e49d7b61f117912bf9d7e).
 
 ## Sources
 * https://simoninithomas.github.io/Deep_reinforcement_learning_Course/
