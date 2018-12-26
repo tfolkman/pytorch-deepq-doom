@@ -31,7 +31,11 @@ def train(key, config):
     device = get_device()
 
     memory = SimpleMemory(config_options["memory_size"])
-    model = DeepQ().to(device)
+    model = DeepQ()
+    if torch.cuda.device_count() > 1:
+        log.info("Using multiple GPUs")
+        model = torch.nn.DataParallel(model)
+    model.to(device)
     model.apply(init_weights)
     optim = torch.optim.Adam(model.parameters(), config_options['lr'])
     loss_function = TDLoss(model, config_options['gamma'], optim)
