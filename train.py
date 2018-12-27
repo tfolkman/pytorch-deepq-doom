@@ -28,17 +28,16 @@ def train(key, config):
                             disabled=config_options['disable_comet'])
     experiment.log_parameters(config_options)
 
-    device = get_device()
+    devices, more_than_one_device = get_device()
 
     memory = SimpleMemory(config_options["memory_size"])
-    model = DeepQ()
-    if torch.cuda.device_count() > 1:
-        log.info("Using multiple GPUs")
-        model = torch.nn.DataParallel(model)
-    model.to(device)
+    model = DeepQ().to(devices[0])
+    target = DeepQ().to(devices[0])
     model.apply(init_weights)
+    target.load_state_dict(model.state_dict())
+    target.eval()
     optim = torch.optim.Adam(model.parameters(), config_options['lr'])
-    loss_function = TDLoss(model, config_options['gamma'], optim)
+    loss_function = TDLoss(model, target, config_options['gamma'], optim)
     game = DoomBasic()
     initialize_memory(config_options["batch_size"], game, memory)
 
@@ -63,14 +62,14 @@ def train(key, config):
             total_steps += 1
             if done:
                 handle_done(memory.get_stacked_states(), action, reward,  memory)
-                log_statistics_and_save(loss_sum, reward_sum, eps_threshold, step, episode,
-                                        config_options['save_every'], config_options['save_file'],
-                                        model, experiment)
                 break
             else:
                 state, game_start = handle_not_done(game, memory.get_stacked_states(), action, reward,  memory)
 
             loss_sum += loss_function.update_model(memory.sample(config_options["batch_size"]))
+
+        if episode % config_options["update_target_every"] == 0:
+            target.load_state_dict(model.state_dict())
 
         log_statistics_and_save(loss_sum, reward_sum, eps_threshold, config_options['max_steps'], episode,
                                 config_options['save_every'], config_options['save_file'],

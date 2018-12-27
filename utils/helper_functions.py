@@ -49,9 +49,11 @@ def initialize_memory(pretrain_length, game,  memory):
 def epsilon_greedy_move(game, model, state, config, steps_done):
     eps_threshold = config["explore_stop"] + (config["explore_start"] - config["explore_stop"]) \
         * math.exp(-1. * steps_done / config["decay"])
+    devices, _ = get_device()
+    device = devices[0]
     if np.random.rand() > eps_threshold:
         with torch.no_grad():
-            action = game.possible_actions[int(torch.argmax(model(state.to(get_device()))))]
+            action = game.possible_actions[int(torch.argmax(model(state.to(device))))]
     else:
         action = random.choice(game.possible_actions)
     reward, done = game.take_action(action)
@@ -59,8 +61,10 @@ def epsilon_greedy_move(game, model, state, config, steps_done):
 
 
 def get_device():
+    devices = []
     if torch.cuda.is_available():
-        device = torch.device('cuda')
+        for i in range(torch.cuda.device_count()):
+            devices.append(torch.device('cuda:{}'.format(i)))
     else:
-        device = torch.device('cpu')
-    return device
+        devices.append(torch.device('cpu'))
+    return devices, len(devices) > 1

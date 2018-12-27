@@ -11,5 +11,6 @@
   "gamma": 0.99,
   "memory_size": 250000,
   "save_every": 50,
+  "update_target_every": 10,
   "save_file": "./model_weights/doom_dqn_stacked.state"
 }

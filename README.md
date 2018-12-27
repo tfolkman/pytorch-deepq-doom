@@ -19,6 +19,7 @@ automatically uses comet to track the loss and reward during training. Grab your
     * gamma: the discount factor for future rewards
     * memory_size: max memory size
     * save_every: how often to save the model weights and log statistics to the command line (# episodes)
+    * update_target_every: how often to update the target model (number of games).
     * save_file: where to save model weights to
 5. Run: 'pipenv run python --key {comet api key} --config {path to config.json}'
     * Note: path to config.json defaults to config.json

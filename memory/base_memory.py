@@ -10,7 +10,8 @@ class AbstractMemory(ABC):
         self.memory_size = memory_size
         self.memory = deque(maxlen=memory_size)
         self.MemoryItem = namedtuple('MemoryItem', ['state', 'action', 'reward', 'next_state', 'not_done'])
-        self.device = get_device()
+        devices, _ = get_device()
+        self.device = devices[0]
 
     def __len__(self):
         return len(self.memory)
