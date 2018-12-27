@@ -11,8 +11,10 @@ class TDLoss(AbstractLoss):
         :param memory_sample: Assumes of type MemoryItem (see base_memory.py)
         :return:
         """
-        max_q_next_state, _ = torch.max(self.target_model(memory_sample.next_state).detach(), 1)
-        target = memory_sample.reward + (self.gamma * max_q_next_state * memory_sample.not_done)
+        best_action_next_state = torch.argmax(self.model(memory_sample.next_state).detach(), 1).unsqueeze(-1)
+        q_next_state = self.target_model(memory_sample.next_state).detach()
+        best_q_next_state = q_next_state.gather(1, best_action_next_state)
+        target = memory_sample.reward + (self.gamma * best_q_next_state * memory_sample.not_done)
         action_indexes = torch.argmax(memory_sample.action, 1).unsqueeze(1)
         action_indexes = action_indexes.to(self.device)
         predicted = self.model(memory_sample.state).gather(1, action_indexes).squeeze(1)
