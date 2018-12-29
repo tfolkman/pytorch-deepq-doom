@@ -19,7 +19,8 @@ log = logging.getLogger(__name__)
 def play_game(weights, n, sleep):
     game = DoomBasic()
     game.set_window_visibility(True)
-    device = get_device()
+    devices, _ = get_device()
+    device = devices[0]
     model = DeepQ().to(device)
     model.load_state_dict(torch.load(weights))
     memory = SimpleMemory(1)
@@ -29,7 +30,7 @@ def play_game(weights, n, sleep):
         state = memory.transform(game.get_state())
         memory.fill_stack(state)
         while not game.is_done():
-            predictions = model(memory.get_stacked_states().to(get_device()))
+            predictions = model(memory.get_stacked_states().to(device))
             action = game.possible_actions[int(torch.argmax(predictions))]
             reward, _ = game.take_action(action)
             total_reward += reward
