@@ -1,5 +1,5 @@
 {
-  "disable_comet": true,
+  "disable_comet": false,
   "name": "Doom-DeepQ",
   "lr": 0.0001,
   "total_episodes": 2000,

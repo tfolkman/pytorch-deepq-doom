@@ -13,7 +13,7 @@ class TDLoss(AbstractLoss):
         """
         best_action_next_state = torch.argmax(self.model(memory_sample.next_state).detach(), 1).unsqueeze(-1)
         q_next_state = self.target_model(memory_sample.next_state).detach()
-        best_q_next_state = q_next_state.gather(1, best_action_next_state)
+        best_q_next_state = q_next_state.gather(1, best_action_next_state).squeeze(-1)
         target = memory_sample.reward + (self.gamma * best_q_next_state * memory_sample.not_done)
         action_indexes = torch.argmax(memory_sample.action, 1).unsqueeze(1)
         action_indexes = action_indexes.to(self.device)
