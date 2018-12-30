@@ -8,7 +8,7 @@ from models.initializers import init_weights
 from utils.config_options import load_config
 from utils.helper_functions import epsilon_greedy_move, handle_done, handle_not_done, initialize_memory, get_device
 from memory.simple import SimpleMemory
-from models.cnns import DeepQ
+from models.cnns import Dueling
 from games.doom_basic import DoomBasic
 
 logging.basicConfig(level="INFO")
@@ -30,15 +30,16 @@ def train(key, config):
 
     devices, more_than_one_device = get_device()
 
+    game = DoomBasic()
+    n_actions = len(game.possible_actions)
     memory = SimpleMemory(config_options["memory_size"])
-    model = DeepQ().to(devices[0])
-    target = DeepQ().to(devices[0])
+    model = Dueling(n_actions).to(devices[0])
+    target = Dueling(n_actions).to(devices[0])
     model.apply(init_weights)
     target.load_state_dict(model.state_dict())
     target.eval()
     optim = torch.optim.Adam(model.parameters(), config_options['lr'])
     loss_function = TDLoss(model, target, config_options['gamma'], optim)
-    game = DoomBasic()
     initialize_memory(config_options["batch_size"], game, memory)
 
     total_steps = 0

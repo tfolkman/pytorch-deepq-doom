@@ -4,7 +4,7 @@ import torch
 import click
 from games.doom_basic import DoomBasic
 from memory.simple import SimpleMemory
-from models.cnns import DeepQ
+from models.cnns import Dueling
 from utils.helper_functions import get_device
 
 logging.basicConfig(level="INFO")
@@ -21,7 +21,7 @@ def play_game(weights, n, sleep):
     game.set_window_visibility(True)
     devices, _ = get_device()
     device = devices[0]
-    model = DeepQ().to(device)
+    model = Dueling(len(game.possible_actions)).to(device)
     model.load_state_dict(torch.load(weights))
     memory = SimpleMemory(1)
     for i in range(n):
